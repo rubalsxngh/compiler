@@ -1,0 +1,669 @@
+﻿First and follow
+
+
+
+
+def first_calc(terminal, non_terminal, production):
+    first= []
+    
+    for i in range(len(production)-1, -1, -1):
+        prodi= list(production[i])
+        str1= ""
+        
+        j=0
+        while j< len(prodi)-1:
+            if prodi[j]=='=' and prodi[j+1].islower():
+                str1= str1+ prodi[j+1]
+            elif prodi[j]=='|' and prodi[j+1].islower():
+                str1= str1+ prodi[j+1]
+            elif prodi[j]=='=' and prodi[j+1].isupper():
+                if prodi[j+1] in non_terminal:
+                    k=0
+                    for k in range(0, len(non_terminal)):
+                        if prodi[j+1]== non_terminal[k]:
+                            break
+                
+                print(first)
+                str1= str1+ first[0]
+            
+            elif prodi[j]=='|' and prodi[j+1].isupper():
+                if prodi[j+1] in non_terminal:
+                    k=0
+                    for k in range(0, len(non_terminal)):
+                        if prodi[j+1]== non_terminal[k]:
+                            break
+                
+                ans.append(first[k])
+            
+            
+            j+=1
+            
+        
+        first.append(str1)
+        
+            
+    
+    print(first)
+
+
+
+
+
+
+
+
+n= int(input("print number of terminals: "))
+nt= int(input("print number of non terminals: "))
+
+
+np= int(input("enter number of productions: "))
+
+
+
+
+
+
+terminal= []*n
+non_terminal= []*nt
+
+
+production= []
+
+
+
+
+print("please enter the non_terminal")
+for i in range(n):
+    non_terminal.append(str.upper(input()))
+    
+
+
+
+
+
+
+print("please enter terminal")
+for i in range(nt):
+    terminal.append(str(input()))
+    
+
+
+
+
+print("please enter the production")
+for i in range(np):
+    production.append(str(input()))
+    
+    
+    
+print(terminal)
+print(non_terminal)
+print(production)
+    
+    
+
+
+first_calc(terminal, non_terminal, production)
+—-----------------------------------------------------------------------------------------------------------------
+    
+    
+
+
+
+
+#to remove comments
+
+
+
+
+import re
+
+
+
+
+def remove_comments(prog):
+    prog= re.sub(r'#.*', '', prog)
+
+
+    prog= re.sub(r'""".*?"""', '', prog, flags=re.DOTALL)
+
+
+
+
+    return prog
+
+
+
+
+
+
+input_file= 'program.py'
+output_file= 'p1.py'
+
+
+with open(input_file, 'r') as f:
+    prog= f.read()
+
+
+mod_p= remove_comments(prog)
+
+
+
+
+with open(output_file, 'w') as fw:
+    fw.write(mod_p)
+
+
+
+
+
+
+—--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#to remove whitelines and next lines
+
+
+
+
+input_file= 'p1.py'
+output_file= 'p2.py'
+
+
+
+
+
+
+with open(input_file, 'r') as f:
+    with open(output_file, 'w') as fw:
+        content= "".join(line.strip() for line in f)
+
+
+        fw.write(content)
+
+
+
+
+—-----------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+import re
+
+
+
+
+def mac_df(input_s):
+    macro_def= {
+        "pi": "3.14",
+        "r": "5"
+    }
+
+
+    reg= r"\b\w+\b"
+
+
+    macro_names= re.findall(reg, input_s)
+
+
+    for macro in macro_names:
+        if macro in macro_def:
+            input_s= input_s.replace(macro, macro_def[macro])
+    
+
+
+    return input_s
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+input_s= """
+#include<stdio.h>
+ans= 2*pi*r;
+return;
+"""
+
+
+mod= mac_df(input_s)
+print(mod)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+—------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def parse_E(tokens):
+    parse_i(tokens)
+    parse_E_p(tokens)
+
+
+
+
+def parse_i(tokens):
+    if tokens and tokens[0]=='i':
+        tokens.pop(0)
+    else:
+        raise SyntaxError("invalid")
+
+
+
+
+
+
+def parse_E_p(tokens):
+    if tokens and tokens[0]=='+':
+        tokens.pop(0)
+        parse_i(tokens)
+        parse_E_p(tokens)
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def parse(expression):
+    tokens= list(expression)
+
+
+    try:
+        parse_E(tokens)
+
+
+        if not tokens:
+            print("valid expression")
+        else:
+            raise SyntaxError("invalied expression")
+    
+    except SyntaxError as e:
+        print(e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+exp= str(input("Enter the expression: "))
+
+
+parse(exp)
+
+
+
+
+
+
+
+
+
+
+—---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+#code to genearte three address code from a given expression
+
+
+class ThreeAddressCodeGenerator:
+    def __init__(self):
+        self.temp_counter = 1
+        self.code = []
+
+
+    def generate_temp(self):
+        temp = f"t{self.temp_counter}"
+        self.temp_counter += 1
+        return temp
+
+
+    def generate_code(self, entry):
+        parts = entry.split("=")
+        result = parts[0].strip()
+        expression = parts[1].strip()
+
+
+        operators = ['+', '-', '*', '/']
+        tokens = re.findall(r'\b\w+\b|[+\-*/]', expression)
+
+
+        while len(tokens) > 1:
+            operand1 = tokens.pop(0)
+            operator = tokens.pop(0)
+            operand2 = tokens.pop(0)
+
+
+            temp = self.generate_temp()
+            code_line = f"{temp} = {operand1} {operator} {operand2}"
+            self.code.append(code_line)
+
+
+            tokens.insert(0, temp)
+
+
+        final_code = f"{result} = {tokens[0]}"
+        self.code.append(final_code)
+
+
+    def display_code(self):
+        for line in self.code:
+            print(line)
+
+
+def convert_to_three_address_code(expression):
+    generator = ThreeAddressCodeGenerator()
+    entries = expression.split(";")
+
+
+    for entry in entries:
+        generator.generate_code(entry)
+
+
+    print("Three-address code:")
+    generator.display_code()
+
+
+# Example usage
+expression = "x = a + b + c + d"
+convert_to_three_address_code(expression)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+—--------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def remove_left(terminal, non_terminal, production, li):
+
+
+    new_prod= []
+
+
+    for i in range(len(production)):
+        if i in li:
+            tokens= list(production[i])
+
+
+            str1= tokens[0]
+
+
+            j=3
+            while(tokens[j]!='|'):
+                j+=1
+            
+            str1= str1 + '=' + tokens[j+1] + tokens[0] + '`'
+            new_prod.append(str1)
+
+
+
+
+            str1= tokens[0] + '`' + '=' + tokens[2] + '|' + 'epsilon'
+
+
+            new_prod.append(str1)
+
+
+        else:
+            new_prod.append(production[i])
+
+
+
+
+    
+
+
+    print(new_prod)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def remove_left_rec_c(terminal, non_terminal, production):
+    li= []
+    for i in range(len(production)):
+        tokens= list(production[i])
+        print(tokens)
+
+
+        for j in range(len(tokens)-1):
+            if (tokens[j]=='=' and tokens[j+1]== tokens[0]) or (tokens[j]=='|' and tokens[j+1]==tokens[0]):
+                li.append(i)
+                break
+    
+    print(li)
+    return li
+
+
+
+
+n= int(input("print number of terminals: "))
+nt= int(input("print number of non terminals: "))
+
+
+np= int(input("enter number of productions: "))
+
+
+
+
+
+
+terminal= []*n
+non_terminal= []*nt
+
+
+production= []
+
+
+
+
+print("please enter the non_terminal")
+for i in range(nt):
+    non_terminal.append(str.upper(input()))
+    
+
+
+
+
+
+
+print("please enter terminal")
+for i in range(n):
+    terminal.append(str(input()))
+    
+
+
+
+
+print("please enter the production")
+for i in range(np):
+    production.append(str(input()))
+    
+    
+    
+print(terminal)
+print(non_terminal)
+
+
+
+
+li= remove_left_rec_c(terminal, non_terminal, production)
+
+
+
+
+remove_left(terminal, non_terminal, production, li)
